@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+    <table class="table col-12">
+        <thead>
+            <tr>
+                <th scope="col" class="w-75">Task</th>
+                <th scope="col" class="w-25"><a href="{% url 'todo_add' %}" class="btn btn-success">Add</a></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in data %}
+            <tr>
+                <td><a href="{% url 'todo_details' gid=item.gid %}" class="">{{ item.name }}</a></td>
+                <td><a href="{% url 'todo_delete' gid=item.gid %}" class="btn btn-danger">Delete</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

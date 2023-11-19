@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block content %}
+    <div class="card col-8">
+        <div class="card-body">
+            <form action="{% url 'todo_edit' %}" method="post">
+                {% csrf_token %}
+                <div class="form-check">
+                  <input type="checkbox" class="form-check-input" id="completed" name="completed"{% if data.completed %} checked{% endif %}>
+                  <label class="form-check-label" for="completed">Completed</label>
+                  <small class="form-text text-muted">Completed At : {{data.completed_at|default:""}}</small>
+                </div>
+                <div class="form-group">
+                    <label for="name">Task</label>
+                    <input type="text" class="form-control" name="name" id="name" placeholder="Enter Task" value="{{ data.name }}">
+                </div>
+                <div class="form-group">
+                    <label for="name">Description</label>
+                    <textarea class="form-control" name="notes" id="notes" rows="3">{{ data.notes }}</textarea>
+                </div>
+                {% for key, value in data.custom_field.items %}
+                <div class="form-group">
+                    <label for="{{ key }}">{{ value.name }}</label>
+                    <select class="form-control" id="{{ key }}" name="custom_fields">
+                        {% for element_key,element_value in value.options.items %}
+                        <option value="{{ key }}:{{ element_key }}"{% if value.value == element_key %} selected{% endif %}>{{ element_value }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endfor %}
+                <input type="text" class="invisible" name="gid" id="gid" value="{{ data.gid }}">
+                <hr/>
+                <button type="submit" class="btn btn-primary">Save</button>
+                {% if data.gid %}
+                <a href="{% url 'todo_delete' gid=data.gid %}" class="btn btn-danger">Delete</a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+    <div class="card col-4">
+        <div class="card-body">
+            <label><a href="{{data.permalink_url|default:'#'}}" target="_blank">Link</a></label>
+            <hr/>
+            <label>Created : {{data.created_at|default:""}}</label>
+            <hr/>
+            <label>Assignee : {{data.assignee.name|default:""}}</label>
+            <hr/>
+            <label>Start date : {{data.start_on|default:""}}</label>
+            <hr/>
+            <label>Due date : {{data.due_on|default:""}}</label>
+        </div>
+    </div>
+{% endblock %}
